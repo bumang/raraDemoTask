@@ -10,11 +10,13 @@ import {
   CloseButton,
 } from '@chakra-ui/react';
 import PrimaryButton from 'components/PrimaryButton';
+import { inputItemProps } from 'constant';
+
 import { useState } from 'react';
 import { Link } from 'react-location';
 
-const NavBar = () => {
-  const [searchValue, setSearchValue] = useState('');
+const NavBar = ({ inputValue, setInputValue }: inputItemProps) => {
+  // const [searchValue, setSearchValue] = useState('');
   const [showSearchBox, setShowSearchBox] = useState(false);
 
   const displaySearchBar = () => {
@@ -33,17 +35,17 @@ const NavBar = () => {
             <HStack>
               <Input
                 borderRadius="10px"
-                value={searchValue}
+                value={inputValue}
                 placeholder="Search..."
                 size="sm"
                 variant="filled"
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) => setInputValue(e.target.value)}
               />
-              {searchValue && (
+              {inputValue && (
                 <CloseButton
                   position="absolute"
                   right="1"
-                  onClick={() => setSearchValue('')}
+                  onClick={() => setInputValue('')}
                   size="md"
                 />
               )}

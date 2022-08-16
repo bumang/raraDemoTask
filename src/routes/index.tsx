@@ -1,4 +1,6 @@
-import { lazy } from 'react';
+import { Box } from '@chakra-ui/react';
+import NavBar from 'components/NavBar';
+import { lazy, useState } from 'react';
 const IndexPage = lazy(() => import('pages/Index'));
 const AddUserPage = lazy(() => import('pages/AddUserPage'));
 const Page404 = lazy(() => import('pages/Page404'));
@@ -18,5 +20,4 @@ export const routes = [
     element: <Page404 />,
   },
 ];
-
 export default routes;

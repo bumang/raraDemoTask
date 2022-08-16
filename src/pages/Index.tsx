@@ -12,9 +12,30 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useAxiosQuery } from 'hooks/useAxiosQuery';
-import { fetchedData } from 'constant';
+import { fetchedData, inputItemProps } from 'constant';
+import { sortedUser } from 'functions/sortObjectItems';
 
 const Index = () => {
+  /* search values */
+  const [searchValue, setSearchValue] = useState('');
+  const filterData = (users: fetchedData[]) => {
+    return (
+      users &&
+      users.filter((user: any) => {
+        return (
+          user.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.phone.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.website.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.address.street.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.address.city.toLowerCase().includes(searchValue.toLowerCase()) ||
+          user.address.zipcode.toLowerCase().includes(searchValue.toLowerCase())
+        );
+      })
+    );
+  };
+
   /* fetch completion callback functions */
   const onSuccess = () => {
     console.log('fetch done');
@@ -28,26 +49,14 @@ const Index = () => {
   const { data: users, isLoading, isError, error } = useAxiosQuery({ onSuccess, onError });
 
   /* sorting according to username */
-  const sortedUser = () => {
-    users?.sort((a: any, b: any) => {
-      let fa: string = a.username.toLowerCase();
-      let fb: string = b.username.toLowerCase();
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
-    });
-  };
-  sortedUser();
+  sortedUser(users);
 
   /* checkbox logic */
   /* defining object with id as key and boolean as value =>{ user.id : false } | empty   */
   const [checkedItems, setCheckedItems] = useState<Map<string, boolean> | any>({});
   const allChecked = Object.values(checkedItems).every(Boolean);
   const isIndeterminate = Object.values(checkedItems).some(Boolean) && !allChecked;
+
   /*setting all the values for the response fetched data to false   */
   useEffect(() => {
     const checkBoxObject: Map<string, boolean> = users?.reduce((obj: any, user: any) => {
@@ -55,11 +64,14 @@ const Index = () => {
     }, {});
     /* setting the state  */
     checkBoxObject && setCheckedItems(checkBoxObject);
+    /* search logic */
   }, [users]);
+
   /* handle function for children checkbox */
   const handleCheckItems = (userId: string, e: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedItems({ ...checkedItems, [userId]: e.target.checked });
   };
+
   /* handle function for parent checkbox */
   const handleParentCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
     let allCheck = Object.keys(checkedItems).reduce((acc: any | {}, key: string) => {
@@ -71,49 +83,48 @@ const Index = () => {
 
   return (
     <Box>
-      <NavBar />
-
+      <NavBar inputValue={searchValue} setInputValue={setSearchValue} />
       {/* Table Made Using Flex  */}
       {/* table head */}
       <Flex>
         <Wrap w="100%" h="48px" bg="#EEF1F7">
-          <WrapItem>
-            <Center h="48px" w="105px">
+          <WrapItem flex="1 1 0" maxWidth="100px">
+            <Box h="48px" display="flex" width="100%" justifyContent="center">
               <Checkbox
                 isChecked={allChecked}
                 isIndeterminate={isIndeterminate}
                 border="2px gray"
                 onChange={(e) => handleParentCheckBox(e)}
               ></Checkbox>
-            </Center>
+            </Box>
           </WrapItem>
-          <WrapItem>
-            <Text h="48px" w="201px" padding="15px" fontSize="13px" fontWeight="500">
+          <WrapItem flex="1 1 0">
+            <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
               Name
             </Text>
           </WrapItem>
-          <WrapItem>
-            <Text h="48px" w="133px" padding="15px" fontSize="13px" fontWeight="500">
+          <WrapItem flex="1 1 0">
+            <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
               Username
             </Text>
           </WrapItem>
-          <WrapItem>
-            <Text h="48px" w="220px" padding="15px" fontSize="13px" fontWeight="500">
+          <WrapItem flex="1 1 0">
+            <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
               Email
             </Text>
           </WrapItem>
-          <WrapItem>
-            <Text h="48px" w="200px" padding="15px" fontSize="13px" fontWeight="500">
+          <WrapItem flex="1 1 0">
+            <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
               Phone
             </Text>
           </WrapItem>
-          <WrapItem>
-            <Text h="48px" w="183px" padding="15px" fontSize="13px" fontWeight="500">
+          <WrapItem flex="1 1 0">
+            <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
               Website
             </Text>
           </WrapItem>
-          <WrapItem>
-            <Text h="48px" w="300px" padding="15px" fontSize="13px" fontWeight="500">
+          <WrapItem flex="1 1 0" minWidth="300px">
+            <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
               Address
             </Text>
           </WrapItem>
@@ -131,13 +142,13 @@ const Index = () => {
         </Center>
       ) : null}
       {/* table Items */}
-      {users &&
-        users.map((user: fetchedData) => {
+      {filterData(users) &&
+        filterData(users).map((user: fetchedData) => {
           return (
             <Flex key={user.id}>
               <Wrap w="100%" h="48px">
-                <WrapItem>
-                  <Center h="48px" w="105px">
+                <WrapItem flex="1 1 0" maxWidth="100px">
+                  <Box h="48px" display="flex" width="100%" justifyContent="center">
                     <Checkbox
                       key={user.id}
                       border="2px gray"
@@ -146,35 +157,35 @@ const Index = () => {
                         handleCheckItems(user.id, e);
                       }}
                     ></Checkbox>
-                  </Center>
+                  </Box>
                 </WrapItem>
-                <WrapItem>
-                  <Text h="48px" w="201px" padding="15px" fontSize="13px" fontWeight="500">
+                <WrapItem flex="1 1 0">
+                  <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
                     {user.name}
                   </Text>
                 </WrapItem>
-                <WrapItem>
-                  <Text h="48px" w="133px" padding="15px" fontSize="13px" fontWeight="500">
+                <WrapItem flex="1 1 0" minWidth="150px">
+                  <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
                     {user.username}
                   </Text>
                 </WrapItem>
-                <WrapItem>
-                  <Text h="48px" w="220px" padding="15px" fontSize="13px" fontWeight="500">
+                <WrapItem flex="1 1 0">
+                  <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
                     {user.email}
                   </Text>
                 </WrapItem>
-                <WrapItem>
-                  <Text h="48px" w="200px" padding="15px" fontSize="13px" fontWeight="500">
+                <WrapItem flex="1 1 0" minWidth="150px">
+                  <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
                     {user.phone}
                   </Text>
                 </WrapItem>
-                <WrapItem>
-                  <Text h="48px" w="183px" padding="15px" fontSize="13px" fontWeight="500">
+                <WrapItem flex="1 1 0">
+                  <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
                     {user.website}
                   </Text>
                 </WrapItem>
-                <WrapItem>
-                  <Text h="48px" w="300px" padding="15px" fontSize="13px" fontWeight="500">
+                <WrapItem flex="1 1 0" minWidth="300px">
+                  <Text h="48px" padding="15px" fontSize="13px" fontWeight="500">
                     {`${user.address.street}, ${user.address.city}, ${user.address.zipcode}`}
                   </Text>
                 </WrapItem>

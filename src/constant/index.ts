@@ -9,3 +9,9 @@ export type fetchedData = {
   website: string;
   address: { street: string; city: string; zipcode: number };
 };
+
+export interface inputItemProps {
+  inputValue: string;
+  setInputValue: (active: string) => void;
+}
+
