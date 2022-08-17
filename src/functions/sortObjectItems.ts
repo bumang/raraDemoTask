@@ -1,6 +1,6 @@
 /* sorting according to username */
 
-export const sortedUser = (users: any) => {
+export const sortByUser = (users: any) => {
   users?.sort((a: any, b: any) => {
     let fa: string = a.username.toLowerCase();
     let fb: string = b.username.toLowerCase();
@@ -12,4 +12,6 @@ export const sortedUser = (users: any) => {
     }
     return 0;
   });
+
+  return users;
 };

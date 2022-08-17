@@ -1,9 +1,7 @@
-import { Box } from '@chakra-ui/react';
-import NavBar from 'components/NavBar';
 import { lazy, useState } from 'react';
-const IndexPage = lazy(() => import('pages/Index'));
+const IndexPage = lazy(() => import('pages/index'));
 const AddUserPage = lazy(() => import('pages/AddUserPage'));
-const Page404 = lazy(() => import('pages/Page404'));
+const Page404 = lazy(() => import('pages/ErrorPage'));
 
 export const routes = [
   {

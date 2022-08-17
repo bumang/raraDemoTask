@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { fetchedData, GRAPHQL_API } from 'constant';
-import { GET_USER_QUERY } from 'graphql/userdetails';
+import { GET_USER_QUERY } from 'graphql/userDetails';
 
 type userArray = fetchedData[];
 type fetchProps = {
@@ -20,7 +20,7 @@ export const useAxiosQuery = ({ onSuccess, onError }: fetchProps) => {
     onSuccess,
     onError,
     select: (data: AxiosResponse) => {
-      const requiredUsersData: userArray = data.data.data.users.data;
+      const requiredUsersData: userArray = data?.data?.data?.users?.data;
       return requiredUsersData;
     },
   });

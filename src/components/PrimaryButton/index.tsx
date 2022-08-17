@@ -1,12 +1,7 @@
 import { Button } from '@chakra-ui/react';
+import { buttonProps } from 'constant';
 
-interface buttonProps {
-  colorScheme: string;
-  size: string;
-  color: string;
-  backgroundColor: string;
-  text: string;
-}
+
 
 const PrimaryButton = ({ colorScheme, size, color, backgroundColor, text }: buttonProps) => {
   return (

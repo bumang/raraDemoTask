@@ -10,17 +10,28 @@ import {
   CloseButton,
 } from '@chakra-ui/react';
 import PrimaryButton from 'components/PrimaryButton';
+import SearchBar from 'components/SearchBar';
 import { inputItemProps } from 'constant';
-
 import { useState } from 'react';
 import { Link } from 'react-location';
 
 const NavBar = ({ inputValue, setInputValue }: inputItemProps) => {
-  // const [searchValue, setSearchValue] = useState('');
+  /* state for displaying search bar onClick searchIcon */
   const [showSearchBox, setShowSearchBox] = useState(false);
 
+  /* hiding search bar logic   */
   const displaySearchBar = () => {
     setShowSearchBox(!showSearchBox);
+  };
+
+  /* search bar props */
+  const searchBarProps = {
+    inputValue: { inputValue },
+    setInputValue: { setInputValue },
+    placeholder: 'Search...',
+    size: 'sm',
+    variant: 'filled',
+    borderRadius: '10px',
   };
 
   return (
@@ -31,26 +42,11 @@ const NavBar = ({ inputValue, setInputValue }: inputItemProps) => {
       <Spacer />
       <Box d="flex" alignItems="flex-start">
         {showSearchBox && (
-          <Box mr="15px" position="relative">
-            <HStack>
-              <Input
-                borderRadius="10px"
-                value={inputValue}
-                placeholder="Search..."
-                size="sm"
-                variant="filled"
-                onChange={(e) => setInputValue(e.target.value)}
-              />
-              {inputValue && (
-                <CloseButton
-                  position="absolute"
-                  right="1"
-                  onClick={() => setInputValue('')}
-                  size="md"
-                />
-              )}
-            </HStack>
-          </Box>
+          <SearchBar
+            inputValue={inputValue}
+            setInputValue={setInputValue}
+            placeholder="Search Table..."
+          />
         )}
         <Box>
           <IconButton
